@@ -14,8 +14,9 @@ public class DnsNotifApplication {
     public static void main(String[] args) {
         SpringApplication.run(DnsNotifApplication.class, args);
         try {
-            service.addOrUpdateDnsRecord("itlayer","10.212.9.108");
-        } catch (IOException e) {
+            System.out.println(service.findDnsRecord("tenten.vn"));
+//            service.addOrUpdateDnsRecord("itlayer","10.212.9.108");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

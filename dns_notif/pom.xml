@@ -26,7 +26,12 @@
             <artifactId>dnsjava</artifactId>
             <version>3.3.1</version>
         </dependency>
-
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/dnsjava/dnsjava &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>dnsjava</groupId>-->
+<!--            <artifactId>dnsjava</artifactId>-->
+<!--            <version>3.5.3</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
