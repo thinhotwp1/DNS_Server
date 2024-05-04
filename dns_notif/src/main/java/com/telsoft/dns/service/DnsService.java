@@ -1,5 +1,7 @@
 package com.telsoft.dns.service;
 
+import com.telsoft.dns.DnsNotifApplication;
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 import org.xbill.DNS.*;
 import org.xbill.DNS.Record;
@@ -9,11 +11,21 @@ import java.net.UnknownHostException;
 
 @Service
 public class DnsService {
-    public void addOrUpdateDnsRecord(String domain, String ipAddress) throws IOException {
-        Update update = new Update(Name.fromString("itlayer.example.com.")); // Thay "example.com" bằng tên miền DNS của bạn
-        update.add(Name.fromString(domain + ".example.com."), Type.A, 86400L, "10.212.9.108"); // 86400L là TTL
+    public static void main(String[] args) {
+        DnsService service  = new DnsService();
+        SpringApplication.run(DnsNotifApplication.class, args);
+        try {
+//            System.out.println(service.findDnsRecord("tenten.vn"));
+            service.addOrUpdateDnsRecord("tenten.vn","137.59.104.97");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        Resolver resolver = new SimpleResolver("10.212.9.108"); // Thay "your-dns-server-address" bằng địa chỉ IP của máy chủ DNS của bạn
+    public void addOrUpdateDnsRecord(String domain, String ipAddress) throws IOException {
+        Update update = new Update(Name.fromString("itlayer.com.")); // Thay "example.com" bằng tên miền DNS của bạn
+        update.add(Name.fromString(domain + "."), Type.A, 86400L, ipAddress); // 86400L là TTL
+        Resolver resolver = new SimpleResolver("8.8.8.8"); // Thay "your-dns-server-address" bằng địa chỉ IP của máy chủ DNS của bạn
 //    resolver.setTSIGKey(new TSIG("your-tsig-key-name", "your-tsig-key")); // Thay "your-tsig-key-name" và "your-tsig-key" bằng thông tin TSIG key nếu cần
         resolver.setTCP(true);
 
@@ -25,34 +37,6 @@ public class DnsService {
         }
     }
 
-    public String findDNS(String domain) throws Exception {
-        domain = "84243993902.2.msisdn.sub.cs";
-        try {
-            Resolver resolver = new SimpleResolver("10.212.9.108");
-            resolver.setTCP(true); // (Tuỳ chọn) Sử dụng TCP cho truy vấn DNS
-
-            Name name = Name.fromString(domain + "."); // Chuyển tên miền thành định dạng DNS
-            Record rec = Record.newRecord(name, Type.A, DClass.IN); // Tạo một bản ghi A (IPv4) cho tên miền
-
-            Lookup lookup = new Lookup(name, Type.A);
-            lookup.setResolver(resolver);
-            lookup.run();
-
-            Record[] records = lookup.getAnswers(); // Lấy các bản ghi DNS tìm thấy
-            if (records != null) {
-                StringBuilder result = new StringBuilder();
-                for (Record record : records) {
-                    result.append(record).append("\n");
-                }
-                return result.toString();
-            } else {
-                return "Không tìm thấy bản ghi DNS cho tên miền " + domain;
-            }
-        } catch (TextParseException | UnknownHostException e) {
-            e.printStackTrace();
-            return "Lỗi khi tìm kiếm bản ghi DNS cho tên miền " + domain;
-        }
-    }
 
     public String findDnsRecord(String domain) {
         try {
